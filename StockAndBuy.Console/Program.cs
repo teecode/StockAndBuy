@@ -8,6 +8,7 @@ using StockAndBuy.Data;
 using StockAndBuy.Data.Repositories;
 using StockAndBuy.Service.Implementation;
 using StockAndBuy.Service.Interfaces;
+using System;
 
 class Program
 {
@@ -55,6 +56,12 @@ class Program
                services.AddTransient<IBundleRepository, BundleRepository>(); // Add your services
                services.AddTransient<ISparePartRepository, SparePartRepository>(); // Add your services
                services.AddTransient<IBundleService, BundleService>(); // Add your services
+
+               using (var scope = services.BuildServiceProvider().CreateScope())
+               {
+                   var dbContext = scope.ServiceProvider.GetRequiredService<StockAndBuyDbContext>();
+                   dbContext.Database.Migrate();
+               }
            });
 }
 
